@@ -5,17 +5,16 @@ int main(){
     
     unsigned int hold = 0;
     //setup
-    outp(0x303, 0x8A); //Port A: out
+    outp(0x303, 0x8A); //Port A: out, Port B: in
     
 
     while(1){
         
-        //Taster abfragen
-         
-        if(inp(0x339) == 0){ //drücken feststellen
+        //Taster bzw. D3 an LPT abfragen
+        if((inp(0x338) & 0x08) == 0){ //drücken feststellen
             sleep(10); //prellen abwarten
             while(1){
-                if(inp(0x339) == 1){  //loslassen feststellen
+                if((inp(0x338) & 0x08) == 1){  //loslassen feststellen
                     sleep(10); //prellen abwarten
                     
                     if(hold == 1){ //LED an oder aus
@@ -27,7 +26,7 @@ int main(){
                         hold = 1;
                         while(1){
                             outp(0x300, 0xff);
-                            if(inp(0x339) == 0){
+                            if((inp(0x338) & 0x08) == 0){
                                 sleep(10);
                                 break;
                             }
